@@ -13,17 +13,16 @@ import {
   Menu as MenuIcon,
   LightMode,
   DarkMode,
+
 } from '@mui/icons-material'
 import { useState } from 'react'
 import { useAppDispatch } from '../redux/hooks'
 import { toggleTheme } from '../redux/slices/themeSlice'
-import { useNavigate } from 'react-router-dom'
 
 export function AppHeader() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -32,11 +31,6 @@ export function AppHeader() {
 
   const handleClose = () => {
     setAnchorEl(null)
-  }
-
-  const handleNavigation = (path: string) => {
-    navigate(path)
-    handleClose()
   }
 
   return (
@@ -57,9 +51,8 @@ export function AppHeader() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={() => handleNavigation('/')}>View Tasks</MenuItem>
-              <MenuItem onClick={() => handleNavigation('/add')}>Add Task</MenuItem>
-              
+              <MenuItem onClick={handleClose}>View Tasks</MenuItem>
+            
             </Menu>
           </>
         )}
@@ -69,6 +62,7 @@ export function AppHeader() {
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 1 }}>
+          
           <IconButton 
             color="inherit"
             onClick={() => dispatch(toggleTheme())}

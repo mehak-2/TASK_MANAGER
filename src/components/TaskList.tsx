@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Fab } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import { useAppSelector, useAppDispatch } from '../redux/hooks'
 import { selectTasks, reorderTasks } from '../redux/slices/tasksSlice'
 import { Task } from './Task'
@@ -29,7 +30,7 @@ export function TaskList() {
   }
 
   return (
-    <Box>
+    <Box sx={{ position: 'relative' }}>
       {tasks.map((task: TaskType, index: number) => (
         <Task 
           key={task.id} 
@@ -38,6 +39,20 @@ export function TaskList() {
           moveTask={moveTask}
         />
       ))}
+      <Fab 
+        color="primary" 
+        aria-label="add task"
+        sx={{
+          position: 'fixed',
+          bottom: 16,
+          right: 16,
+        }}
+        onClick={() => {
+          console.log('Add task clicked')
+        }}
+      >
+        <AddIcon />
+      </Fab>
     </Box>
   )
 } 
