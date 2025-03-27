@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material'
 import { useAppSelector, useAppDispatch } from '../redux/hooks'
 import { selectTasks, reorderTasks } from '../redux/slices/tasksSlice'
 import { Task } from './Task'
+import type { Task as TaskType } from '../redux/slices/tasksSlice'
 
 export function TaskList() {
   const dispatch = useAppDispatch()
@@ -29,7 +30,7 @@ export function TaskList() {
 
   return (
     <Box>
-      {tasks.map((task, index) => (
+      {tasks.map((task: TaskType, index: number) => (
         <Task 
           key={task.id} 
           task={task} 

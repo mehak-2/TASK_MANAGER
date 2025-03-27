@@ -32,14 +32,14 @@ const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    addTask: (state, action: PayloadAction<Omit<Task, 'id' | 'createdAt'>>) => {
+    addTask: (state: TasksState, action: PayloadAction<Omit<Task, 'id' | 'createdAt'>>) => {
       state.tasks.push({
         ...action.payload,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
       })
     },
-    editTask: (state, action: PayloadAction<{ id: string; updates: Partial<Task> }>) => {
+    editTask: (state: TasksState, action: PayloadAction<{ id: string; updates: Partial<Task> }>) => {
       const taskIndex = state.tasks.findIndex(task => task.id === action.payload.id)
       if (taskIndex !== -1) {
         state.tasks[taskIndex] = {
@@ -48,22 +48,22 @@ const tasksSlice = createSlice({
         }
       }
     },
-    deleteTask: (state, action: PayloadAction<string>) => {
+    deleteTask: (state: TasksState, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter(task => task.id !== action.payload)
     },
-    toggleComplete: (state, action: PayloadAction<string>) => {
+    toggleComplete: (state: TasksState, action: PayloadAction<string>) => {
       const task = state.tasks.find(task => task.id === action.payload)
       if (task) {
         task.completed = !task.completed
       }
     },
-    setFilter: (state, action: PayloadAction<Partial<TasksState['filters']>>) => {
+    setFilter: (state: TasksState, action: PayloadAction<Partial<TasksState['filters']>>) => {
       state.filters = {
         ...state.filters,
         ...action.payload
       }
     },
-    reorderTasks: (state, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) => {
+    reorderTasks: (state: TasksState, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) => {
       const { sourceIndex, targetIndex } = action.payload
       const [removed] = state.tasks.splice(sourceIndex, 1)
       state.tasks.splice(targetIndex, 0, removed)
@@ -83,21 +83,20 @@ export const {
   reorderTasks
 } = tasksSlice.actions
 
-// Base selectors
+
 const selectTasksState = (state: { tasks: TasksState }) => state.tasks
 const selectTasksList = createSelector(
   [selectTasksState],
-  (tasksState) => tasksState.tasks
+  (tasksState: TasksState) => tasksState.tasks
 )
 const selectFilters = createSelector(
   [selectTasksState],
-  (tasksState) => tasksState.filters
+  (tasksState: TasksState) => tasksState.filters
 )
 
-// Memoized filtered tasks selector
 export const selectTasks = createSelector(
   [selectTasksList, selectFilters],
-  (tasks, filters) => {
+  (tasks: Task[], filters: TasksState['filters']) => {
     let filteredTasks = tasks
       .filter(task => {
         if (filters.status === 'completed') return task.completed
@@ -110,12 +109,12 @@ export const selectTasks = createSelector(
       })
 
     if (filters.sortBy && filters.sortBy !== 'manual') {
-      filteredTasks = [...filteredTasks].sort((a, b) => {
+      filteredTasks = [...filteredTasks].sort((a: Task, b: Task) => {
         switch (filters.sortBy) {
           case 'date':
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           case 'priority': {
-            const priorityOrder = { high: 3, medium: 2, low: 1 }
+            const priorityOrder: Record<Task['priority'], number> = { high: 3, medium: 2, low: 1 }
             return priorityOrder[b.priority] - priorityOrder[a.priority]
           }
           case 'title':

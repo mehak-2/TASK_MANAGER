@@ -17,13 +17,13 @@ import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { setFilter } from '../redux/slices/tasksSlice'
 import type { SelectChangeEvent } from '@mui/material'
-
+import type { RootState } from '../redux/store'
 
 export function FilterBar() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const dispatch = useAppDispatch()
-  const filters = useAppSelector(state => state.tasks.filters)
+  const filters = useAppSelector((state: RootState) => state.tasks.filters)
 
   const handleStatusChange = (_: React.MouseEvent<HTMLElement>, newStatus: 'all' | 'completed' | 'active') => {
     if (newStatus !== null) {
