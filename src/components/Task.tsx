@@ -177,13 +177,22 @@ export function Task({ task, index, moveTask }: TaskProps) {
                   {task.title}
                 </Typography>
                 {!isMobile && (
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary"
-                    sx={{ maxWidth: '500px' }}
-                  >
-                    {task.description}
-                  </Typography>
+                  <>
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary"
+                      sx={{ maxWidth: '500px' }}
+                    >
+                      {task.description}
+                    </Typography>
+                    <Typography 
+                      variant="caption" 
+                      color="text.secondary"
+                      sx={{ display: 'block', mt: 0.5 }}
+                    >
+                      Created: {new Date(task.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </>
                 )}
               </Box>
             </Box>
@@ -244,14 +253,25 @@ export function Task({ task, index, moveTask }: TaskProps) {
             </Box>
           </Box>
           
-          {isMobile && task.description && (
-            <Typography 
-              variant="body2" 
-              color="text.secondary"
-              sx={{ mt: 1, ml: 5 }}
-            >
-              {task.description}
-            </Typography>
+          {isMobile && (
+            <>
+              {task.description && (
+                <Typography 
+                  variant="body2" 
+                  color="text.secondary"
+                  sx={{ mt: 1, ml: 5 }}
+                >
+                  {task.description}
+                </Typography>
+              )}
+              <Typography 
+                variant="caption" 
+                color="text.secondary"
+                sx={{ mt: 0.5, ml: 5, display: 'block' }}
+              >
+                Created: {new Date(task.createdAt).toLocaleDateString()}
+              </Typography>
+            </>
           )}
         </CardContent>
       </Card>

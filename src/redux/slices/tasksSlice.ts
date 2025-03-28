@@ -70,6 +70,24 @@ const tasksSlice = createSlice({
       
       state.filters.sortBy = 'manual'
     },
+    sortTasks: (state, action: PayloadAction<string>) => {
+      const sortType = action.payload
+      state.tasks = [...state.tasks].sort((a, b) => {
+        switch (sortType) {
+          case 'date':
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          case 'priority': {
+            const priorityOrder = { high: 3, medium: 2, low: 1 }
+            return priorityOrder[b.priority] - priorityOrder[a.priority]
+          }
+          case 'status': {
+            return a.completed === b.completed ? 0 : a.completed ? 1 : -1
+          }
+          default:
+            return 0
+        }
+      })
+    },
   }
 })
 
@@ -80,7 +98,8 @@ export const {
   deleteTask,
   toggleComplete,
   setFilter,
-  reorderTasks
+  reorderTasks,
+  sortTasks
 } = tasksSlice.actions
 
 export const selectTasks = (state: { tasks: TasksState }) => {
